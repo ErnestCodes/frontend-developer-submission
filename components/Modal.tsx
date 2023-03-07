@@ -1,18 +1,22 @@
 import { Dispatch, Fragment, SetStateAction, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 interface modalProp {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  detail: any;
 }
 
-export default function Modal({ open, setOpen }: modalProp) {
+export default function Modal({ open, setOpen, detail }: modalProp) {
   const toggleView = () => {
     setOpen(false);
   };
 
   const cancelButtonRef = useRef(null);
+
+  const { contract, description, title, tokenId } = detail;
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -47,9 +51,13 @@ export default function Modal({ open, setOpen }: modalProp) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <ExclamationTriangleIcon
+                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                    {/* <ExclamationTriangleIcon
                       className="h-6 w-6 text-red-600"
+                      aria-hidden="true"
+                    /> */}
+                    <CheckIcon
+                      className="h-6 w-6 text-green-600"
                       aria-hidden="true"
                     />
                   </div>
@@ -58,25 +66,32 @@ export default function Modal({ open, setOpen }: modalProp) {
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      Deactivate account
+                      {title}
                     </Dialog.Title>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        Are you sure you want to deactivate your account? All of
-                        your data will be permanently removed from our servers
-                        forever. This action cannot be undone.
+                    <div className="my-3">
+                      <p className="text-sm font-semibold text-gray-500">
+                        Address:
                       </p>
+                      <p className="text-sm text-gray-500">
+                        {contract?.address}
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm font-semibold text-gray-500">
+                        Description:
+                      </p>
+                      <p className="text-sm text-gray-500">{description}</p>
                     </div>
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                  <Link
+                    href={`https://opensea.io/assets/matic/0x1ed25648382c2e6da067313e5dacb4f138bc8b33/${tokenId}`}
+                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                     onClick={() => setOpen(false)}
                   >
-                    Deactivate
-                  </button>
+                    Purchase
+                  </Link>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
